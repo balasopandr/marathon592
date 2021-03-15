@@ -8,6 +8,9 @@ edition = "2018"
 name="p0001"
 path="src/p0001.rs"
 
+[[bin]]
+name="p0002"
+path="src/p0002.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
