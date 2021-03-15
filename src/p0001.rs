@@ -7,13 +7,19 @@
     unused_results
 )]
 
-fn razor_sum(bound: u32, razors: [u32;2]) -> u32 {
-    (1..bound).filter(|n| n%3==0 || n%5 ==0).sum()
-    //(1..bound).filter(|n| razors.into_iter().filter(|r| n%r==0)).sum()
+fn razor_sum(bound: u32, razors: &Vec<u32>) -> u32 {
+    (1..bound).filter(|&n| {
+        for r in razors.iter() {
+            if n%r==0 {
+                return true
+            }
+        }
+        return false
+    }).sum()
 }
 
 fn main() {
     let bound: u32 = 1000;
-    let filters: [u32;2] = [3,5];
-    println!("{}", razor_sum(bound, filters));
+    let filters: Vec<u32> = vec![3,5];
+    println!("{}", razor_sum(bound, &filters));
 }
