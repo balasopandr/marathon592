@@ -4,22 +4,6 @@ version = "0.1.0"
 authors = ["balasopandr"]
 edition = "2018"
 
-[[bin]]
-name="p0001"
-path="src/p0001.rs"
-
-[[bin]]
-name="p0002"
-path="src/p0002.rs"
-
-[[bin]]
-name="p0003"
-path="src/p0003.rs"
-
-[[bin]]
-name="p0026"
-path="src/p0026.rs"
-
 [lib]
 name="math"
 path="libs/math.rs"
