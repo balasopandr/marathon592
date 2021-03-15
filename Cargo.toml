@@ -16,6 +16,10 @@ path="src/p0002.rs"
 name="p0003"
 path="src/p0003.rs"
 
+[[bin]]
+name="p0026"
+path="src/p0026.rs"
+
 [lib]
 name="math"
 path="libs/math.rs"
