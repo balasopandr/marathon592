@@ -13,9 +13,9 @@ type Mat = MatrixMN<Elem, U20, U20>;
 pub fn main() {
     #[rustfmt::skip]
     let mat = Mat::from_row_slice(&[
-        08, 02, 22, 97, 38, 15, 00, 40, 00, 75, 04, 05, 07, 78, 52, 12, 50, 77, 91, 08,
-        49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 04, 56, 62, 00,
-        81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 03, 49, 13, 36, 65,
+        08, 02, 22, 97, 38, 15, 00, 40, 00, 75, 04, 05, 07, 78, 52, 12, 50, 77, 91, 08, // 1st row
+        49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 04, 56, 62, 00, // 2nd row
+        81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 03, 49, 13, 36, 65, // ...
         52, 70, 95, 23, 04, 60, 11, 42, 69, 24, 68, 56, 01, 32, 56, 71, 37, 02, 36, 91,
         22, 31, 16, 71, 51, 67, 63, 89, 41, 92, 36, 54, 22, 40, 40, 28, 66, 33, 13, 80,
         24, 47, 32, 60, 99, 03, 45, 02, 44, 75, 33, 53, 78, 36, 84, 20, 35, 17, 12, 50,
@@ -37,9 +37,9 @@ pub fn main() {
 
     let groups = [
         get_hor_groups(&mat),
-        // get_vert_groups(&mat),
-        // get_diagr_groups(&mat),
-        // get_diagl_groups(&mat),
+        get_vert_groups(&mat),
+        get_diagr_groups(&mat),
+        get_diagl_groups(&mat),
     ]
     .concat();
 
@@ -58,49 +58,69 @@ fn get_hor_groups(mat: &Mat) -> Vec<[Elem; 4]> {
     let mut groups = Vec::new();
     groups.reserve(vec_size);
 
-    for c in 0..mat.ncols() - 4 {
+    for c in 0..mat.ncols() - 3 {
         for r in 0..mat.nrows() {
-            // TODO Refactor and use .extend()?
-            let mut g: [Elem; 4] = [0; 4];
-            g[0] = mat[(r, c)];
-            g[1] = mat[(r, c + 1)];
-            g[2] = mat[(r, c + 2)];
-            g[3] = mat[(r, c + 3)];
-            groups.push(g)
+            groups.push([
+                mat[(r, c)],
+                mat[(r, c + 1)],
+                mat[(r, c + 2)],
+                mat[(r, c + 3)],
+            ]);
         }
     }
     return groups;
 }
 
 fn get_vert_groups(mat: &Mat) -> Vec<[Elem; 4]> {
-    let vec_size = (mat.ncols() - GS) * mat.nrows();
+    let vec_size = (mat.ncols() - GS + 1) * mat.nrows();
     let mut groups = Vec::new();
     groups.reserve(vec_size);
 
-    groups.push([1, 2, 3, 4]);
-    groups.push([100, 200, 2, 3]);
-
+    for c in 0..mat.ncols() {
+        for r in 0..mat.nrows() - 3 {
+            groups.push([
+                mat[(r, c)],
+                mat[(r + 1, c)],
+                mat[(r + 2, c)],
+                mat[(r + 3, c)],
+            ]);
+        }
+    }
     return groups;
 }
 
 fn get_diagr_groups(mat: &Mat) -> Vec<[Elem; 4]> {
-    let vec_size = (mat.ncols() - GS) * mat.nrows();
+    let vec_size = (mat.ncols() - GS + 1) * mat.nrows();
     let mut groups = Vec::new();
     groups.reserve(vec_size);
 
-    groups.push([1, 2, 3, 4]);
-    groups.push([100, 200, 2, 3]);
-
+    for c in 0..mat.ncols() - 3 {
+        for r in 0..mat.nrows() - 3 {
+            groups.push([
+                mat[(r, c)],
+                mat[(r + 1, c + 1)],
+                mat[(r + 2, c + 2)],
+                mat[(r + 3, c + 3)],
+            ]);
+        }
+    }
     return groups;
 }
 
 fn get_diagl_groups(mat: &Mat) -> Vec<[Elem; 4]> {
-    let vec_size = (mat.ncols() - GS) * mat.nrows();
+    let vec_size = (mat.ncols() - GS + 1) * mat.nrows();
     let mut groups = Vec::new();
     groups.reserve(vec_size);
 
-    groups.push([1, 2, 3, 4]);
-    groups.push([100, 200, 2, 3]);
-
+    for c in 3..mat.ncols() {
+        for r in 0..mat.nrows() - 3 {
+            groups.push([
+                mat[(r, c)],
+                mat[(r + 1, c - 1)],
+                mat[(r + 2, c - 2)],
+                mat[(r + 3, c - 3)],
+            ]);
+        }
+    }
     return groups;
 }
