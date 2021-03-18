@@ -21,6 +21,9 @@ pub fn is_prime(n: u64) -> bool {
     return true;
 }
 
+// Re-export these, they'll come in handy
+pub use num::integer::{gcd_lcm, gcd, lcm};
+
 /// Compute all the prime numbers up to the given number
 ///
 /// # Examples

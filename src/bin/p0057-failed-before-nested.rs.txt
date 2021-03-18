@@ -1,0 +1,124 @@
+extern crate marathon592;
+
+use marathon592::math_utils::gcd;
+use std::collections::HashMap;
+use std::ops;
+
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
+struct Fraction {
+    pub numer: u32,
+    pub denom: u32,
+}
+
+impl From<u32> for Fraction {
+    fn from(val: u32) -> Self {
+        Fraction {
+            numer: val,
+            denom: 1,
+        }
+    }
+}
+
+impl ops::Add<u32> for Fraction {
+    type Output = Fraction;
+
+    fn add(self, _rhs: u32) -> Fraction {
+        self + Fraction::from(_rhs)
+    }
+}
+
+impl ops::Add<Fraction> for u32 {
+    type Output = Fraction;
+
+    fn add(self, _rhs: Fraction) -> Fraction {
+        _rhs + Fraction::from(self)
+    }
+}
+
+impl ops::Add<Fraction> for Fraction {
+    type Output = Fraction;
+
+    fn add(self, _rhs: Fraction) -> Fraction {
+        let numer = self.numer * _rhs.denom + _rhs.numer * self.denom;
+        let denom = self.denom * _rhs.denom;
+        return Fraction { numer, denom };
+    }
+}
+
+impl Fraction {
+    pub fn make_irreducible(&mut self) -> &Self {
+        let gcd = gcd::<u32>(self.numer, self.denom);
+
+        if gcd != 1 {
+            self.numer /= gcd;
+            self.denom /= gcd;
+        }
+
+        self
+    }
+}
+
+fn numer_has_more_digits(frac: &Fraction) -> bool {
+    frac.numer.to_string().len() > frac.denom.to_string().len()
+}
+
+fn expansion(order: u32) -> Fraction {
+    if order == 0 {
+        return Fraction { numer: 0, denom: 1 };
+    }
+    else {
+        return Fraction { numer: 1, denom: (2 + expansion(order - 1) };
+    }
+}
+
+pub fn main() {
+    let sum = 0;
+    for i in 1..1001 {
+        let frac = 1 + expansion(i);
+        if numer_has_more_digits(&frac) {
+            sum = sum + 1;
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn make_irreducible_test() {
+        let input_to_expected_output: HashMap<Fraction, Fraction> = [
+            (
+                Fraction {
+                    numer: 120,
+                    denom: 90,
+                },
+                Fraction { numer: 4, denom: 3 },
+            ),
+            (
+                Fraction {
+                    numer: 180,
+                    denom: 90,
+                },
+                Fraction { numer: 2, denom: 1 },
+            ),
+            (
+                Fraction {
+                    numer: 181,
+                    denom: 90,
+                },
+                Fraction {
+                    numer: 181,
+                    denom: 90,
+                },
+            ),
+        ]
+        .iter()
+        .cloned()
+        .collect();
+
+        for (input, expected_output) in &input_to_expected_output {
+            assert_eq!(input.clone().make_irreducible(), expected_output);
+        }
+    }
+}

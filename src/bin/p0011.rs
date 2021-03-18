@@ -5,7 +5,7 @@ use std::vec::Vec;
 use na::{MatrixMN, U20};
 
 // group size, fixed
-static GS: usize = 4;
+const GS: usize = 4;
 
 type Elem = u32;
 type Mat = MatrixMN<Elem, U20, U20>;
