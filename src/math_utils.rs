@@ -1,5 +1,6 @@
 use num::{cast::AsPrimitive, ToPrimitive, Unsigned};
 use std::vec::Vec;
+use primitive_types::U512;
 
 pub fn is_prime(n: u64) -> bool {
     if n <= 3 {
@@ -77,4 +78,42 @@ where
         .collect::<Vec<T>>();
 
     return out;
+}
+
+
+// TODO Make the unsigned prerequisite explicit
+pub fn gcd_bigint(val1: &U512, val2: &U512) -> U512 {
+    // Use Stein's algorithm
+    let mut m = *val1;
+    let mut n = *val2;
+    if m == 0.into() || n == 0.into() {
+        return m | n;
+    }
+
+    // find common factors of 2
+    let shift = (m | n).trailing_zeros();
+
+    // The algorithm needs positive numbers, but the minimum value
+    // can't be represented as a positive one.
+    // It's also a power of two, so the gcd can be
+    // calculated by bitshifting in that case
+
+    if m == 0.into() || n == 0.into() {
+        return U512::from(1) << U512::from(shift);
+    }
+
+    // divide n and m by 2 until odd
+    m >>= m.trailing_zeros();
+    n >>= n.trailing_zeros();
+
+    while m != n {
+        if m > n {
+            m -= n;
+            m >>= m.trailing_zeros();
+        } else {
+            n -= m;
+            n >>= n.trailing_zeros();
+        }
+    }
+    m << shift
 }
