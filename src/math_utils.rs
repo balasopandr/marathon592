@@ -117,3 +117,22 @@ pub fn gcd_bigint(val1: &U512, val2: &U512) -> U512 {
     }
     m << shift
 }
+
+/// Checks if the number is a palindrome or not
+/// TODO: Maybe it could be extended to more number types?
+/// # Examples
+///
+/// ```
+/// assert_eq!(is_palindrome(1331), true);
+/// assert_eq!(is_palindrome(42913828922), false);
+pub fn is_palindrome(n: u64) -> bool {
+    let mut reversed = 0;
+    let mut number = n;
+
+    while number > 0 {
+        reversed = reversed*10 + number%10;
+        number = number/10;
+    }
+
+    reversed == n || number/10 == n
+}
